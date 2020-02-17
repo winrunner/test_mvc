@@ -6,7 +6,7 @@ class Controller_Main extends Controller {
         $this->view = new View();
     }
     function action_index() {
-        $data = $this->model->get_data();
+        $data = $this->model->get_orders();
         $this->view->generate('orders.php', 'Список', $data);
     }
 }
