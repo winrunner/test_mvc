@@ -27,14 +27,14 @@ class Model {
     /**
      * Считает количество строк в запросе
      */
-    protected function num($q) {
+    public function num($q) {
         return mysqli_num_rows($q);
     }
 
     /**
      * Преобразует запрос в ассоциативный массив
      */
-    protected function fetch($q) {
+    public function fetch($q) {
         return mysqli_fetch_assoc($q);
     }
 

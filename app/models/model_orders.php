@@ -32,7 +32,7 @@ class Model_Orders extends Model {
         }
     }
 
-    public function get_orders($sort_by = null, $reverse = false) {
+    public function get_orders($sort_by = null, $reverse = false, $offset = 0, $opp = OPP) {
         $sort = '';
         if($reverse) {
             $order = "DESC";
@@ -44,7 +44,10 @@ class Model_Orders extends Model {
         } else {
             $sort = "ORDER BY `id` $order";
         }
-        $q = $this->query("SELECT * FROM `orders` $sort");
+        if($opp > 0) {
+            $limit = "LIMIT $offset,$opp";
+        }
+        $q = $this->query("SELECT * FROM `orders` $sort $limit");
         if($q) {
             return $q;
         } else {

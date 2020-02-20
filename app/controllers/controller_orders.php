@@ -7,8 +7,17 @@ class Controller_Orders extends Controller {
     }
 
     function action_index() {
-        $data = $this->model->get_orders();
-        $this->view->generate('orders.php', 'Список', $data);
+        $currentPage = 1;
+        if($_GET['page'] && intval($_GET['page']) > 0) {
+            $currentPage = intval($_GET['page']);
+        }
+        $offset = ($currentPage - 1) * OPP;
+        $orders = $this->model->get_orders(null, false, 0, 0);
+        $pages = ceil($this->model->num($orders)/OPP);
+
+        $data = $this->model->get_orders(null, false, $offset);
+        $attr['pagination'] = array($currentPage, $pages);
+        $this->view->generate('orders.php', 'Задачи', $data, $attr);
     }
 
     function action_add($param = null) {
@@ -61,32 +70,51 @@ class Controller_Orders extends Controller {
     }
 
     function action_reverse() {
-        $data = $this->model->get_orders(null, true);
+        $currentPage = 1;
+        if($_GET['page'] && intval($_GET['page']) > 0) {
+            $currentPage = intval($_GET['page']);
+        }
+        $offset = ($currentPage - 1) * OPP;
+        $orders = $this->model->get_orders(null, false, 0, 0);
+        $pages = ceil($this->model->num($orders)/OPP);
+        
+        $attr['pagination'] = array($currentPage, $pages);
+        $data = $this->model->get_orders(null, true, $offset);
         $this->view->generate('orders.php', 'Задачи', $data);
     }
 
     function action_sort($param = null) {
-        $data = $this->model->get_orders(null, true);
+        $currentPage = 1;
+        if($_GET['page'] && intval($_GET['page']) > 0) {
+            $currentPage = intval($_GET['page']);
+        }
+        $offset = ($currentPage - 1) * OPP;
+        $orders = $this->model->get_orders(null, false, 0, 0);
+        $pages = ceil($this->model->num($orders)/OPP);
+
+        $data = $this->model->get_orders(null, true, $offset);
         if($param) {
             if($param == 'name') {
-                $data = $this->model->get_orders('username');
+                $data = $this->model->get_orders('username', false, $offset);
             } else if($param == 'name_r') {
-                $data = $this->model->get_orders('username', true);
+                $data = $this->model->get_orders('username', true, $offset);
             } else if($param == 'email') {
-                $data = $this->model->get_orders('email');
+                $data = $this->model->get_orders('email', false, $offset);
             } else if($param == 'email_r') {
-                $data = $this->model->get_orders('email', true);
+                $data = $this->model->get_orders('email', true, $offset);
             } else if($param == 'status') {
-                $data = $this->model->get_orders('status');
+                $data = $this->model->get_orders('status', false, $offset);
             } else if($param == 'status_r') {
-                $data = $this->model->get_orders('status', true);
+                $data = $this->model->get_orders('status', true, $offset);
             } else {
                 Route::pageNotFound();
             }
         } else {
             Route::pageNotFound();
         }
-        $this->view->generate('orders.php', 'Задачи', $data);
+        
+        $attr['pagination'] = array($currentPage, $pages);
+        $this->view->generate('orders.php', 'Задачи', $data, $attr);
     }
 
     function action_delete($id) {
@@ -94,11 +122,11 @@ class Controller_Orders extends Controller {
             header('Location: /orders?msg=error');
             return;
         }
-        if(!is_int($id)) {
+        $id = intval($id);
+        if($id == 0) {
             Route::pageNotFound();
             return;
         }
-        $id = intval($id);
         $q = $this->model->delete_order($id);
         if($q) {
             header('Location: /orders?msg=success_delete');
