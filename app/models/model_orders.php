@@ -1,18 +1,8 @@
 <?php
 
 class Model_Orders extends Model {
-    public function get_data() {
-        $arr = [
-            ['title' => 'Title_1', 'content' => 'Content_1'],
-            ['title' => 'Title_2', 'content' => 'Content_2']
-        ];
-        return $arr;
-    }
-
     public function add_order($content, $email, $name) {
-        $mc = mysqli_connect(DBHOST, DBUSER, DBPASSWORD, DBNAME);
-        $q = mysqli_query($mc, "INSERT INTO `orders` (`status`, `content`, `email`, `username`) VALUES ('created', '$content', '$email', '$name')");
-        mysqli_close($mc);
+        $q = $this->query("INSERT INTO `orders` (`status`, `content`, `email`, `username`) VALUES ('created', '$content', '$email', '$name')");
         if($q) {
             return true;
         } else {
@@ -21,11 +11,8 @@ class Model_Orders extends Model {
     }
 
     public function edit_order($id, $status, $content, $email, $name, $admin_edit) {
-        $mc = mysqli_connect(DBHOST, DBUSER, DBPASSWORD, DBNAME);
-        $q = mysqli_query($mc, "UPDATE `orders` SET `status` = '$status', `content` = '$content', `email` = '$email', `username` = '$name', `admin_edit` = $admin_edit WHERE `id` = $id");
+        $q = $this->query("UPDATE `orders` SET `status` = '$status', `content` = '$content', `email` = '$email', `username` = '$name', `admin_edit` = $admin_edit WHERE `id` = $id");
         echo "ID: $id\n";
-        mysqli_close($mc);
-        var_dump($q);
         if($q) {
             echo "EDIT_ORDER TRUE";
             return true;
@@ -36,14 +23,11 @@ class Model_Orders extends Model {
     }
 
     public function delete_order($id) {
-        $mc = mysqli_connect(DBHOST, DBUSER, DBPASSWORD, DBNAME);
-        $c = mysqli_query($mc, "SELECT * FROM `orders` WHERE `id` = $id");
-        if(mysqli_num_rows($c) == 0) {
-            mysqli_close($mc);
+        $c = $this->query("SELECT * FROM `orders` WHERE `id` = $id");
+        if($this->num($c) == 0) {
             return false;
         }
-        $q = mysqli_query($mc, "DELETE FROM `orders` WHERE `id` = $id");
-        mysqli_close($mc);
+        $q = $this->query("DELETE FROM `orders` WHERE `id` = $id");
         if($q) {
             return true;
         } else {
@@ -63,9 +47,7 @@ class Model_Orders extends Model {
         } else {
             $sort = "ORDER BY `id` $order";
         }
-        $mc = mysqli_connect(DBHOST, DBUSER, DBPASSWORD, DBNAME);
-        $q = mysqli_query($mc, "SELECT * FROM `orders` $sort");
-        mysqli_close($mc);
+        $q = $this->query("SELECT * FROM `orders` $sort");
         if($q) {
             return $q;
         } else {
@@ -78,11 +60,9 @@ class Model_Orders extends Model {
         if($id == 0) {
             return false;
         }
-        $mc = mysqli_connect(DBHOST, DBUSER, DBPASSWORD, DBNAME);
-        $q = mysqli_query($mc, "SELECT * FROM `orders` WHERE `id` = $id");
-        mysqli_close($mc);
-        if(mysqli_num_rows($q) > 0) {
-            return mysqli_fetch_assoc($q);
+        $q = $this->query("SELECT * FROM `orders` WHERE `id` = $id");
+        if($this->num($q) > 0) {
+            return $this->fetch($q);
         } else {
             return false;
         }

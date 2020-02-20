@@ -1,17 +1,35 @@
 <?php
 
 class Model {
-    public function get_data() {}
+    protected $mc;
+
+    function __construct($dbhost = DBHOST, $dbuser = DBUSER, $dbpassword = DBPASSWORD, $dbname = DBNAME) {
+        $this->mc = mysqli_connect($dbhost, $dbuser, $dbpassword, $dbname);
+    }
+
+    function __destruct() {
+        mysqli_close($this->mc);
+    }
+
+    protected function query($sql) {
+        return mysqli_query($this->mc, $sql);
+    }
+
+    protected function num($q) {
+        return mysqli_num_rows($q);
+    }
+
+    protected function fetch($q) {
+        return mysqli_fetch_assoc($q);
+    }
 
     public function is_admin($id = null) {
         if(!$id) {
             return false;
         }
-        $mc = mysqli_connect(DBHOST, DBUSER, DBPASSWORD, DBNAME);
-        $q = mysqli_query($mc, "SELECT `login` FROM `users` WHERE `id` = $id");
-        mysqli_close($mc);
-        if(mysqli_num_rows($q) > 0) {
-            return mysqli_fetch_assoc($q);
+        $q = $this->query("SELECT `login` FROM `users` WHERE `id` = $id");
+        if($this->num($q) > 0) {
+            return $this->fetch($q);
         }
         return false;
     }
