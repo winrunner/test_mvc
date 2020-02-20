@@ -12,12 +12,9 @@ class Model_Orders extends Model {
 
     public function edit_order($id, $status, $content, $email, $name, $admin_edit) {
         $q = $this->query("UPDATE `orders` SET `status` = '$status', `content` = '$content', `email` = '$email', `username` = '$name', `admin_edit` = $admin_edit WHERE `id` = $id");
-        echo "ID: $id\n";
         if($q) {
-            echo "EDIT_ORDER TRUE";
             return true;
         } else {
-            echo "EDIT_ORDER FALSE";
             return false;
         }
     }

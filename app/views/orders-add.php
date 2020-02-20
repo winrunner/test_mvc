@@ -16,12 +16,14 @@
 <div class="row justify-content-center my-3">
     <div class="col-md-8">
         <form action="" method="POST">
+            <?php if($order_id && $order_id > 0) : ?>
             <div class="form-group">
                 <select name="status" id="status" class="form-control">
                     <option value="created" <?php echo $created_checked; ?>>Создана</option>
                     <option value="completed" <?php echo $completed_checked; ?>>Выполнена</option>
                 </select>
             </div>
+            <?php endif; ?>
             <div class="form-group">
                 <input type="text" name="name" class="form-control" id="name" placeholder="Имя" required="required" value="<?php echo $order_name; ?>">
             </div>
