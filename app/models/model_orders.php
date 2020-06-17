@@ -34,6 +34,7 @@ class Model_Orders extends Model {
 
     public function get_orders($sort_by = null, $reverse = false, $offset = 0, $opp = OPP) {
         $sort = '';
+        $limit = '';
         if($reverse) {
             $order = "DESC";
         } else {

@@ -38,6 +38,18 @@ class Model {
         return mysqli_fetch_assoc($q);
     }
 
+    public function get($table, $id = 0) {
+        $where = ' 1';
+        if($id > 0) {
+            $where = " `id` = $id";
+        }
+        $q = $this->query("SELECT * FROM `$table` WHERE $where");
+        if($this->num($q) > 0) {
+            return $this->fetch($q);
+        }
+        return false;
+    }
+
     /**
      * Проверяет логин пользователя
      */

@@ -8,8 +8,10 @@ class Controller_Orders extends Controller {
 
     function action_index() {
         $currentPage = 1;
-        if($_GET['page'] && intval($_GET['page']) > 0) {
-            $currentPage = intval($_GET['page']);
+        if(isset($_GET['page'])) {
+            if($_GET['page'] && intval($_GET['page']) > 0) {
+                $currentPage = intval($_GET['page']);
+            }
         }
         $offset = ($currentPage - 1) * OPP;
         $orders = $this->model->get_orders(null, false, 0, 0);

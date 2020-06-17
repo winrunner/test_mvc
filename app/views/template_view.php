@@ -32,16 +32,18 @@
     </nav>
     <?php
         $msg = array('', '');
-        if($_GET['msg'] == 'success_login') {
-            $msg = array('success', 'Вы успешно вошли');
-        } else if($_GET['msg'] == 'success_add') {
-            $msg = array('success', 'Добавление прошло успешно');
-        } else if($_GET['msg'] == 'success_edit') {
-            $msg = array('success', 'Изменение прошло успешно');
-        } else if($_GET['msg'] == 'success_delete') {
-            $msg = array('success', 'Удаление прошло успешно');
-        } else if($_GET['msg'] == 'error') {
-            $msg = array('danger', 'Попробуйте еще раз');
+        if(isset($_GET['msg'])) {
+            if($_GET['msg'] == 'success_login') {
+                $msg = array('success', 'Вы успешно вошли');
+            } else if($_GET['msg'] == 'success_add') {
+                $msg = array('success', 'Добавление прошло успешно');
+            } else if($_GET['msg'] == 'success_edit') {
+                $msg = array('success', 'Изменение прошло успешно');
+            } else if($_GET['msg'] == 'success_delete') {
+                $msg = array('success', 'Удаление прошло успешно');
+            } else if($_GET['msg'] == 'error') {
+                $msg = array('danger', 'Попробуйте еще раз');
+            }
         }
         if(isset($attr['message']) && $attr['message'][1] != '') {
             $msg = array($attr['message'][0], $attr['message'][1]);
